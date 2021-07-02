@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 // 外部套件
+import 'bootstrap';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import {
