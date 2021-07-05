@@ -1,51 +1,88 @@
 <template>
-  <div class="container">
-    <h2 class="text-center pt-5">您的購物車</h2>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>品項</th>
-          <th></th>
-          <th>單價</th>
-          <th>數量</th>
-          <th>金額</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody class="js-cartItem">
-        <tr v-for="item in carts.carts" :key="item.id">
-        <td>
-            <p>{{ item.product.title }}</p>
-        </td>
-        <td>
-          <img :src="item.product.imageUrl" alt="product" width="120" height="100"></td>
-        <td>NT$ {{ item.product.price }}</td>
-        <td>
-          <a href="#" class="btn btn-danger btn-sm"
-          :class="{'disabled':item.qty===1 ||icon.isLoading===item.id}"
-          @click.prevent="updateCart(item,item.qty-1)">-</a>
-          {{item.qty}}
-          <a href="#" class="btn btn-danger btn-sm"
-          :class="{'disabled' : icon.isLoading === item.id}"
-          @click.prevent="updateCart(item,item.qty+1)">+</a>
-        </td>
-        <td>NT$ {{ item.total }}</td>
-        <td class="discardBtn">
-          <a href="#" class="btn btn-danger"
-          :class="{'disabled' : icon.isLoading === item.id}"
-          @click.prevent="removeCartItem(item.id)">
-          <div
-            class="spinner-border spinner-border-sm"
-            role="status"
-            v-if="icon.isLoading === item.id"
-          >
-            <span class="visually-hidden"></span>
-          </div>刪除
-          </a>
-        </td>
-      </tr>
-      </tbody>
-      <tfoot>
+  <section class="py-5">
+    <div class="container">
+      <h2 class="text-center">您的購物車</h2>
+      <!-- 購物流程 -->
+      <div class="d-flex justify-content-center my-3">
+        <div class="progresses">
+          <div class="steps bg-primary">
+            <span class="font-weight-bold">1</span>
+          </div>
+          <span class="line bg-primary"></span>
+          <div class="steps bg-primary">
+            <span class="font-weight-bold">2</span>
+          </div>
+          <span class="line bg-primary"></span>
+          <div class="steps bg-primary"><span class="font-weight-bold">3</span></div>
+        </div>
+      </div>
+      <!-- 購物流程 END -->
+      <div class="row">
+        <div class="col-lg-8">
+          <table class="table text-primary">
+            <thead class="text-dark bg-secondary">
+              <tr>
+                <th>品項</th>
+                <th></th>
+                <th>單價</th>
+                <th>數量</th>
+                <th>金額</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody class="js-cartItem">
+              <tr
+                class="align-middle"
+                v-for="item in carts.carts"
+                :key="item.id"
+              >
+                <td>
+                  <p class="fw-bold">{{ item.product.title }}</p>
+                </td>
+                <td>
+                  <div class="wrap">
+                    <img :src="item.product.imageUrl" alt="product" />
+                  </div>
+                </td>
+                <td>NT$ {{ item.product.price }}</td>
+                <td>
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-outline-primary">
+                      -
+                    </button>
+                    <input
+                      type="number"
+                      :value="item.qty"
+                      class="text-center"
+                    />
+                    <button type="button" class="btn btn-outline-primary">
+                      +
+                    </button>
+                  </div>
+                </td>
+                <td>NT$ {{ item.total }}</td>
+                <td class="discardBtn">
+                  <a
+                    href="#"
+                    class="text-danger"
+                    :class="{ disabled: icon.isLoading === item.id }"
+                    @click.prevent="removeCartItem(item.id)"
+                  >
+                    <div
+                      class="spinner-border spinner-border-sm"
+                      role="status"
+                      v-if="icon.isLoading === item.id"
+                    >
+                      <span class="visually-hidden"></span>
+                    </div>
+                    <span class="material-icons-outlined">
+                      delete_outline
+                    </span>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+            <!-- <tfoot>
         <tr>
           <td>
             <a href="#" class="btn btn-outline-danger"
@@ -58,9 +95,21 @@
           </td>
           <td class="text-info fw-bold">NT$ {{ carts.total }}</td>
         </tr>
-      </tfoot>
-    </table>
-  </div>
+      </tfoot> -->
+          </table>
+          <div class="d-flex justify-content-between">
+            <div class="btn btn-outline-primary">繼續購物</div>
+            <div class="btn btn-primary">下一步</div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="order p-3 border border-3 bg-secondary">
+            <h4>訂單列表</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -146,3 +195,35 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.wrap {
+  width: 120px;
+  img {
+    object-fit: cover;
+    width: 100%;
+    height: 100px;
+  }
+}
+// 進度條
+.progresses {
+    display: flex;
+    align-items: center
+}
+
+.line {
+    width: 120px;
+    height: 6px;
+}
+
+.steps {
+    display: flex;
+    color: #fff;
+    font-size: 14px;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%
+}
+</style>
