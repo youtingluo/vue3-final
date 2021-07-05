@@ -11,7 +11,7 @@
       <img class="logo" src="../assets/logo.svg" alt="logo" />
       <h1 class="h1 text-white my-5">COFFEE BEAT</h1>
       <p class="h3">每天都需要一杯咖啡，為什麼？</p>
-      <p class="h3">它，是你一天動力的來源</p>
+      <p class="h3 mb-0">它，是你一天動力的來源</p>
       <div class="explore text-secondary fw-bold">Explore</div>
     </div>
   </header>
@@ -25,7 +25,7 @@
     <div class="container">
       <div class="row mt-5 mt-lg-0">
         <div class="col-xl-9 offset-xl-3">
-          <h2 class="fw-bold display-1 my-5">一整天活力的來源</h2>
+          <h2 class="fw-bold display-1 mb-5">一整天活力的來源</h2>
         </div>
       </div>
       <div class="row">
@@ -249,7 +249,7 @@ header {
     }
   }
   overflow: hidden;
-  height: 100vh;
+  height: calc(100vh - 72px );
   background-color: #402219;
   color: #ececec;
   text-align: center;
@@ -260,6 +260,7 @@ header {
     bottom: calc(0% - 15px);
     width: 105%;
     background-color: transparent;
+    z-index: 2;
   }
   .h1 {
     letter-spacing: 3px;

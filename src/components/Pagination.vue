@@ -25,3 +25,10 @@ export default {
   props: ['pages'],
 };
 </script>
+
+<style lang="scss">
+  .page-item.active .page-link {
+    background-color: #84543B;
+    border-color: #84543B;
+  }
+</style>

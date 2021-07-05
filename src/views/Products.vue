@@ -1,66 +1,87 @@
 <template>
-<div class="container py-5">
-  <div class="row mt-5">
-    <template v-for="(item, key) in products" :key="item.id">
-      <div class="col-12" v-if="key % 4 === 0">
-        <a href="#" class="text-dark text-decoration-none" @click.prevent="goToProduct(item)">
-          <div class="product mb-3">
-            <div class="row align-items-center">
-              <div class="col-md-6">
-                <div class="bg-lg" :style="`background-image: url(${item.imageUrl})`">
-                </div>
-              </div>
-              <div class="col-md-6 p-5">
-                <p class="d-none d-md-block">{{ item.category }}</p>
-                <h2>{{ item.title }}</h2>
-                <p>$ {{ item.price }}</p>
-                <p class="my-5 d-none d-md-block">Lorem ipsum dolor
-                  sit amet consectetur adipisicing elit. Atque,
-                  eligendi.Lorem ipsum dolor sit amet consectetur
-                  adipisicing elit. Atque, eligendi.</p>
-                <button type="button"
-                class="btn button rounded-0 d-none d-md-block w-50">查看更多</button>
-              </div>
-            </div>
-          </div>
+<div class="container-fluid mt-5">
+  <div class="row">
+    <div class="col-lg-3 mb-3 mb-lg-0">
+      <div class="list-group">
+        <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+          咖啡豆
         </a>
+        <a href="#" class="list-group-item list-group-item-action">A second link item</a>
+        <a href="#" class="list-group-item list-group-item-action">A third link item</a>
+        <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>
       </div>
-      <div class="col-md-4" v-else>
+    </div>
+    <div class="col-lg-9">
+      <div class="row">
+      <div class="col-md-6 col-xl-4 mb-3" v-for="item in products" :key="item.id">
         <a href="#" class="text-dark text-decoration-none" @click.prevent="goToProduct(item)">
-          <div class="product mb-3">
+          <div class="product h-100">
             <div>
-              <div class="bg" :style="`background-image: url(${item.imageUrl})`"></div>
-              <div class="text p-5">
-                <h2>{{ item.title }}</h2>
-                <p>$ {{ item.price }}</p>
+              <div class="products-img-wrap">
+                <div class="products-img h-100"
+                :style="`background-image: url(${item.imageUrl})`"></div>
+              </div>
+              <div class="d-flex flex-column justify-content-between p-4">
+                <div>
+                  <h2 class="fs-2">{{ item.title }}</h2>
+                  <p class="fs-4">$ {{ item.price }}</p>
+                  <p class="ellipsis text-primary" v-html="item.content"></p>
+                </div>
+                <div class="btn btn-outline-primary">加入購物車</div>
               </div>
             </div>
           </div>
         </a>
       </div>
-    </template>
+    <Pagination :pages="pagination" @get-page="getProducts"></Pagination>
+  </div>
+    </div>
   </div>
 </div>
 </template>
 
 <script>
+import Pagination from '@/components/Pagination.vue';
+
 export default {
+  components: {
+    Pagination,
+  },
   data() {
     return {
       loadingStatus: {
         isLoading: '',
       },
       products: [],
+      pagination: {},
+      qty: 1,
     };
   },
   methods: {
-    getProducts() {
+    addToCart(id) {
+      const cart = { product_id: id, qty: this.qty };
       this.$http
-        .get(`${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_PATH}/products`)
+        .post(`${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_PATH}/cart`, { data: cart })
+        .then((res) => {
+          console.log(res);
+          if (res.data.success) {
+            console.log(res.data);
+          } else {
+            console.log(res.data.message);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getProducts(page = 1) {
+      this.$http
+        .get(`${process.env.VUE_APP_URL}/api/${process.env.VUE_APP_PATH}/products?page=${page}`)
         .then((res) => {
           console.log(res.data);
           if (res.data.success) {
             this.products = res.data.products;
+            this.pagination = res.data.pagination;
           } else {
             console.log(res.data.message);
           }
@@ -81,67 +102,28 @@ export default {
 
 <style lang="scss" scoped>
 .product {
-  transition: .3s;
-}
-a:hover .product{
-  box-shadow: 1px 1px 10px 0px rgba(0, 0, 0, 0.2);
-}
-
-@mixin pad {
-  @media (max-width: 768px) {
-    @content;
-  }
-}
-.product {
   background-color: #eee;
-}
-a:hover .child {
-  transform: scale(1.2);
-}
-.bg-lg {
-  height: 500px;
-  background-size: cover;
-  background-position: center;
-  @include pad {
-    height: 300px;
+  transition: .3s;
+  &:hover {
+    box-shadow: 1px 1px 10px 0px rgba(0, 0, 0, 0.2);
   }
-}
-.bg {
-  height: 300px;
-  background-size: cover;
-  background-position: center;
+  &:hover .products-img{
+    transform: scale(1.2);
+  }
+    .products-img-wrap {
+    height: 300px;
+    overflow: hidden;
+    .products-img {
+      background-size: cover;
+      background-position: center;
+      transition: .3s;
+    }
+  }
 }
 
-.button {
-  text-decoration: none;
-  padding: 1rem;
-  background-color: #fff;
-  color: #000;
-  position: relative;
-  z-index: 10;
-  &:hover {
-    color: #fff;
-  }
-  &::before {
-    transition: 0.3s ease-in-out;
-    content: "";
-    position: absolute;
-    left: -1px;
-    top: 0;
-    width: 0px;
-    height: 100%;
-    background-color: #000;
-    z-index: -1;
-  }
-  &:hover::before {
-    content: "";
-    left: 0;
-    top: 0;
-    width: 100%;
-  }
-}
-.bg-cover {
-  background-size: cover;
-  background-position: center center;
+.ellipsis {
+overflow:hidden;
+white-space: nowrap;
+text-overflow: ellipsis;
 }
 </style>

@@ -1,7 +1,30 @@
 <template>
-  <div class="container">
-    <h2 class="text-center pt-5">您的購物車</h2>
-    <table class="table">
+    <!-- 商品 -->
+    <div class="wrap py-2 p-md-3" v-for="item in carts.carts" :key="item.id">
+      <div class="d-flex">
+        <div>
+          <a href="#">
+            <img :src="item.product.imageUrl" title="item.product.title" alt="product Image">
+          </a>
+        </div>
+        <div class="d-flex flex-column justify-content-between ms-auto">
+          <div>
+            <h5>{{ item.product.title }}</h5>
+          </div>
+          <div class="d-flex justify-content-end align-items-center">
+            <p class="mb-0">{{ item.qty }} x NT$ {{ item.product.price }}</p>
+              <button type="button"
+              class="btn btn-sm btn-outline-danger ms-3"
+              @click.prevent="removeCarts(item.id)"
+              >
+                <span class="material-icons-outlined">
+                  remove
+                </span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <table class="table">
       <thead>
         <tr>
           <th>品項</th>
@@ -17,8 +40,7 @@
         <td>
             <p>{{ item.product.title }}</p>
         </td>
-        <td>
-          <img :src="item.product.imageUrl" alt="product" width="120" height="100"></td>
+        <td><img :src="item.product.imageUrl" alt="product" width="120" height="100"></td>
         <td>NT$ {{ item.product.price }}</td>
         <td>
           <a href="#" class="btn btn-danger btn-sm"
@@ -59,8 +81,7 @@
           <td class="text-info fw-bold">NT$ {{ carts.total }}</td>
         </tr>
       </tfoot>
-    </table>
-  </div>
+    </table> -->
 </template>
 
 <script>
@@ -146,3 +167,14 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+  .wrap {
+    width: 100%;
+    img {
+      object-fit: cover;
+      width: 100px;
+      height: 100px;
+    }
+  }
+</style>
